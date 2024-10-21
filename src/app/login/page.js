@@ -1,4 +1,5 @@
 'use client';
+
 import { useState } from 'react';
 
 export default function Login() {
@@ -7,17 +8,9 @@ export default function Login() {
   const [message, setMessage] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
 
-  const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-
   const handleLogin = async () => {
-    if (!apiBaseUrl) {
-      setMessage('API URL is not configured');
-      setIsSuccess(false);
-      return;
-    }
-
     try {
-      const response = await fetch(`${apiBaseUrl}/login`, {
+      const response = await fetch('https://tech0-gen-7-step3-studentwebapp-pos-test2-ekh7bbekctbtbee8.eastus-01.azurewebsites.net/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
