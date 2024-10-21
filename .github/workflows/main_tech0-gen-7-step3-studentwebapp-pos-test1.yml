@@ -29,10 +29,25 @@ jobs:
 
       - name: Copy artifact for deployment job
         run: |
-          mkdir deploy
-          cp -r ./.next/standalone/. ./deploy
-          cp -r ./public ./deploy
-          cp -r ./.next/static/. ./deploy/.next/static
+          mkdir -p deploy
+          if [ -d ".next/standalone" ]; then
+            cp -r ./.next/standalone/. ./deploy
+          else
+            echo ".next/standalone directory not found"
+          fi
+          if [ -d "public" ]; then
+            cp -r ./public ./deploy
+          else
+            echo "public directory not found, skipping"
+          fi
+          if [ -d ".next/static" ]; then
+            mkdir -p ./deploy/.next/static
+            cp -r ./.next/static/. ./deploy/.next/static
+          else
+            echo ".next/static directory not found"
+          fi
+          cp package.json ./deploy/ || echo "package.json not found"
+          cp next.config.mjs ./deploy/ || echo "next.config.mjs not found"
 
       - name: Zip artifact for deployment
         run: zip release.zip ./deploy -r
