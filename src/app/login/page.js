@@ -1,19 +1,21 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 export default function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
-  const [apiBaseUrl, setApiBaseUrl] = useState('');
 
-  useEffect(() => {
-    // クライアントサイドでのみ実行
-    setApiBaseUrl(process.env.NEXT_PUBLIC_API_BASE_URL || '');
-  }, []);
+  const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   const handleLogin = async () => {
+    if (!apiBaseUrl) {
+      setMessage('API URL is not configured');
+      setIsSuccess(false);
+      return;
+    }
+
     try {
       const response = await fetch(`${apiBaseUrl}/login`, {
         method: 'POST',
