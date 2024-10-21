@@ -1,16 +1,21 @@
 'use client';
-
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
+  const [apiBaseUrl, setApiBaseUrl] = useState('');
+
+  useEffect(() => {
+    // クライアントサイドでのみ実行
+    setApiBaseUrl(process.env.NEXT_PUBLIC_API_BASE_URL || '');
+  }, []);
 
   const handleLogin = async () => {
     try {
-      const response = await fetch('https://tech0-gen-7-step3-studentwebapp-pos-test2-ekh7bbekctbtbee8.eastus-01.azurewebsites.net/login', {
+      const response = await fetch(`${apiBaseUrl}/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -20,7 +25,6 @@ export default function Login() {
       const data = await response.json();
       if (response.ok) {
         setIsSuccess(true);
-        // FastAPIから返されたメッセージを表示
         setMessage(data.message);
       } else {
         setIsSuccess(false);
